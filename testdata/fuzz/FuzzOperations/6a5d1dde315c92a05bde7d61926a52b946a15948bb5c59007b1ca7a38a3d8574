@@ -1,0 +1,2 @@
+go test fuzz v1
+[]byte("drq\x05\x86K\xfd\x1c")
