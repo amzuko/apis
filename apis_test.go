@@ -158,18 +158,20 @@ func getOpen(b byte) bool {
 	return b%2 == 1
 }
 
+// Fuzz set operations, interpreting a byte array to apply different operations (compliment, union, intersect) to sets also derived from the same input byte array.
 func FuzzOperations(f *testing.F) {
 	f.Fuzz(func(t *testing.T, b []byte) {
 		// Create an initial set
 		if len(b) < 4 {
 			t.SkipNow()
 		}
-		s := New(getValue(b[0]), getOpen(b[1]), getValue(b[2]), getOpen(b[2]))
+		s := New(getValue(b[0]), getOpen(b[1]), getValue(b[2]), getOpen(b[3]))
 
 		t.Logf("Created '%v'", s.String())
 
-		i := 3
+		i := 4
 		for {
+			// Loop through the byte array, consuming bytes and using them to configure different operations.
 			if i >= len(b) {
 				break
 			}
@@ -181,6 +183,7 @@ func FuzzOperations(f *testing.F) {
 
 				i++
 			case 1:
+				// Make sure we have enough bytes left to configure the operation.
 				if i + 4 >= len(b) {
 					i += 5
 					break
